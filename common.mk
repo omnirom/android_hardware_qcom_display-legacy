@@ -8,11 +8,6 @@ common_includes += hardware/qcom/display-caf/libhwcomposer
 common_includes += hardware/qcom/display-caf/libexternal
 common_includes += hardware/qcom/display-caf/libqservice
 
-ifeq ($(TARGET_USES_POST_PROCESSING),true)
-    common_flags     += -DUSES_POST_PROCESSING
-    common_includes += $(TARGET_OUT_HEADERS)/pp/inc
-endif
-
 
 #Common libraries external to display-caf HAL
 common_libs := liblog libutils libcutils libhardware

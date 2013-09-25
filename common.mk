@@ -8,6 +8,7 @@ common_includes += hardware/qcom/display-caf/libhwcomposer
 common_includes += hardware/qcom/display-caf/libexternal
 common_includes += hardware/qcom/display-caf/libqservice
 
+common_header_export_path := qcom/display
 
 #Common libraries external to display-caf HAL
 common_libs := liblog libutils libcutils libhardware

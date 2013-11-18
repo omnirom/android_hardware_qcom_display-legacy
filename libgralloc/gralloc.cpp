@@ -66,7 +66,7 @@ struct private_module_t HAL_MODULE_INFO_SYM = {
 base: {
     common: {
         tag: HARDWARE_MODULE_TAG,
-             module_api_version: 1,
+             module_api_version: GRALLOC_MODULE_API_VERSION_0_1,
              hal_api_version: 0,
              id: GRALLOC_HARDWARE_MODULE_ID,
              name: "Graphics Memory Allocator Module",

@@ -1,12 +1,12 @@
 #Common headers
-common_includes := hardware/qcom/display-caf/libgralloc
-common_includes += hardware/qcom/display-caf/libgenlock
-common_includes += hardware/qcom/display-caf/liboverlay
-common_includes += hardware/qcom/display-caf/libcopybit
-common_includes += hardware/qcom/display-caf/libqdutils
-common_includes += hardware/qcom/display-caf/libhwcomposer
-common_includes += hardware/qcom/display-caf/libexternal
-common_includes += hardware/qcom/display-caf/libqservice
+common_includes := hardware/qcom/display-legacy/libgralloc
+common_includes += hardware/qcom/display-legacy/libgenlock
+common_includes += hardware/qcom/display-legacy/liboverlay
+common_includes += hardware/qcom/display-legacy/libcopybit
+common_includes += hardware/qcom/display-legacy/libqdutils
+common_includes += hardware/qcom/display-legacy/libhwcomposer
+common_includes += hardware/qcom/display-legacy/libexternal
+common_includes += hardware/qcom/display-legacy/libqservice
 
 common_header_export_path := qcom/display
 

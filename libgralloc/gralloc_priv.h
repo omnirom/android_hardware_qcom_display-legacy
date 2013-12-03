@@ -170,9 +170,6 @@ enum {
                              GRALLOC_USAGE_PRIVATE_MM_HEAP        |\
                              GRALLOC_USAGE_PRIVATE_WRITEBACK_HEAP |\
                              GRALLOC_USAGE_PRIVATE_CAMERA_HEAP)
-#define DEVICE_PMEM "/dev/pmem"
-#define DEVICE_PMEM_ADSP "/dev/pmem_adsp"
-#define DEVICE_PMEM_SMIPOOL "/dev/pmem_smipool"
 #endif
 
 /*****************************************************************************/
@@ -240,6 +237,7 @@ struct private_handle_t : public native_handle {
             PRIV_FLAGS_EXTERNAL_BLOCK     = 0x00004000,
             // Display this buffer on external as close caption
             PRIV_FLAGS_EXTERNAL_CC        = 0x00008000,
+            PRIV_FLAGS_USES_PMEM_SMI      = 0x00010000,
         };
 
         // file-descriptors

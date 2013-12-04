@@ -23,6 +23,7 @@
 #include <sys/types.h>
 #include <sys/ioctl.h>
 #include <cutils/properties.h>
+#include <utils/RefBase.h>
 
 #include <linux/android_pmem.h>
 
@@ -32,6 +33,7 @@
 #include "alloc_controller.h"
 
 using namespace gralloc;
+using android::sp;
 
 int fb_device_open(const hw_module_t* module, const char* name,
                    hw_device_t** device);
@@ -66,7 +68,7 @@ struct private_module_t HAL_MODULE_INFO_SYM = {
 base: {
     common: {
         tag: HARDWARE_MODULE_TAG,
-             module_api_version: GRALLOC_MODULE_API_VERSION_0_1,
+             module_api_version: 1,
              hal_api_version: 0,
              id: GRALLOC_HARDWARE_MODULE_ID,
              name: "Graphics Memory Allocator Module",
@@ -98,7 +100,7 @@ int gralloc_device_open(const hw_module_t* module, const char* name,
         const private_module_t* m = reinterpret_cast<const private_module_t*>(
             module);
         gpu_context_t *dev;
-        IAllocController* alloc_ctrl = IAllocController::getInstance(true);
+        sp<IAllocController> alloc_ctrl = IAllocController::getInstance(true);
         dev = new gpu_context_t(m, alloc_ctrl);
         *device = &dev->common;
         status = 0;

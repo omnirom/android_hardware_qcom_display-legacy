@@ -29,9 +29,10 @@
 #include "alloc_controller.h"
 
 using namespace gralloc;
+using android::sp;
 
 gpu_context_t::gpu_context_t(const private_module_t* module,
-                             IAllocController* alloc_ctrl ) :
+                             sp<IAllocController> alloc_ctrl ) :
     mAllocCtrl(alloc_ctrl)
 {
     // Zero out the alloc_device_t
@@ -52,8 +53,8 @@ int gpu_context_t::gralloc_alloc_framebuffer_locked(size_t size, int usage,
 {
     private_module_t* m = reinterpret_cast<private_module_t*>(common.module);
 
-    // we don't support framebuffer allocations with graphics heap flags
-    if (usage & GRALLOC_HEAP_MASK) {
+    // we don't support allocations with both the FB and PMEM_ADSP flags
+    if (usage & GRALLOC_USAGE_PRIVATE_ADSP_HEAP) {
         return -EINVAL;
     }
 
@@ -136,7 +137,7 @@ int gpu_context_t::gralloc_alloc_buffer(size_t size, int usage,
     else
         data.align = getpagesize();
     data.pHandle = (unsigned int) pHandle;
-    err = mAllocCtrl->allocate(data, usage);
+    err = mAllocCtrl->allocate(data, usage, 0);
 
     if (usage & GRALLOC_USAGE_PRIVATE_UNSYNCHRONIZED) {
         flags |= private_handle_t::PRIV_FLAGS_UNSYNCHRONIZED;
@@ -202,7 +203,7 @@ int gpu_context_t::alloc_impl(int w, int h, int format, int usage,
 
     if ((ssize_t)size <= 0)
         return -EINVAL;
-    size = (bufferSize != 0)? bufferSize : size;
+    size = (bufferSize >= size)? bufferSize : size;
 
     // All buffers marked as protected or for external
     // display need to go to overlay
@@ -243,7 +244,7 @@ int gpu_context_t::free_impl(private_handle_t const* hnd) {
         m->bufferMask &= ~(1<<index);
     } else {
         terminateBuffer(&m->base, const_cast<private_handle_t*>(hnd));
-        IMemAlloc* memalloc = mAllocCtrl->getAllocator(hnd->flags);
+        sp<IMemAlloc> memalloc = mAllocCtrl->getAllocator(hnd->flags);
         int err = memalloc->free_buffer((void*)hnd->base, (size_t) hnd->size,
                                         hnd->offset, hnd->fd);
         if(err)

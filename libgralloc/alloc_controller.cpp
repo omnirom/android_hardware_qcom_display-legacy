@@ -48,10 +48,6 @@
 #define VENUS_BUFFER_SIZE(args...) 0
 #endif
 
-#ifndef ION_ADSP_HEAP_ID
-#define ION_ADSP_HEAP_ID ION_CAMERA_HEAP_ID
-#endif
-
 using namespace gralloc;
 using namespace qdutils;
 
@@ -73,8 +69,6 @@ static bool canFallback(int usage, bool triedSystem)
     if(triedSystem)
         return false;
     if(usage & (GRALLOC_HEAP_MASK | GRALLOC_USAGE_PROTECTED))
-        return false;
-    if(usage & (GRALLOC_HEAP_MASK | GRALLOC_USAGE_PRIVATE_EXTERNAL_ONLY))
         return false;
     //Return true by default
     return true;
@@ -213,6 +207,9 @@ int IonController::allocate(alloc_data& data, int usage)
 
     if(usage & GRALLOC_USAGE_PRIVATE_MM_HEAP)
         ionFlags |= ION_HEAP(ION_CP_MM_HEAP_ID);
+
+    if(usage & GRALLOC_USAGE_PRIVATE_CAMERA_HEAP)
+        ionFlags |= ION_HEAP(ION_CAMERA_HEAP_ID);
 
     if(usage & GRALLOC_USAGE_PRIVATE_ADSP_HEAP)
         ionFlags |= ION_HEAP(ION_ADSP_HEAP_ID);

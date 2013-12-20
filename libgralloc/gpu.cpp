@@ -104,17 +104,6 @@ int gpu_context_t::gralloc_alloc_buffer(size_t size, int usage,
         }
 #endif
 
-        if (usage & GRALLOC_USAGE_PRIVATE_EXTERNAL_ONLY) {
-            flags |= private_handle_t::PRIV_FLAGS_EXTERNAL_ONLY;
-            //The EXTERNAL_BLOCK flag is always an add-on
-            if (usage & GRALLOC_USAGE_PRIVATE_EXTERNAL_BLOCK) {
-                flags |= private_handle_t::PRIV_FLAGS_EXTERNAL_BLOCK;
-            }
-            if (usage & GRALLOC_USAGE_PRIVATE_EXTERNAL_CC) {
-                flags |= private_handle_t::PRIV_FLAGS_EXTERNAL_CC;
-            }
-        }
-
         if (usage & GRALLOC_USAGE_HW_VIDEO_ENCODER ) {
             flags |= private_handle_t::PRIV_FLAGS_VIDEO_ENCODER;
         }

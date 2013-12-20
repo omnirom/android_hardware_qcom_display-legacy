@@ -70,8 +70,6 @@ static bool canFallback(int usage, bool triedSystem)
         return false;
     if(usage & (GRALLOC_HEAP_MASK | GRALLOC_USAGE_PROTECTED))
         return false;
-    if(usage & (GRALLOC_HEAP_MASK | GRALLOC_USAGE_PRIVATE_EXTERNAL_ONLY))
-        return false;
     //Return true by default
     return true;
 }

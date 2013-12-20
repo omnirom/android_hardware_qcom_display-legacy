@@ -46,6 +46,7 @@ enum {
     GRALLOC_USAGE_PRIVATE_SYSTEM_HEAP      =      GRALLOC_USAGE_PRIVATE_2,
     /* MM heap is a carveout heap for video, can be secured*/
     GRALLOC_USAGE_PRIVATE_MM_HEAP         =       GRALLOC_USAGE_PRIVATE_3,
+
     /* IOMMU heap comes from manually allocated pages,
      * can be cached/uncached, is not secured */
     GRALLOC_USAGE_PRIVATE_IOMMU_HEAP      =       0x01000000,
@@ -64,8 +65,8 @@ enum {
     GRALLOC_USAGE_PRIVATE_UNSYNCHRONIZED  =       0X04000000,
 #endif
 
-    /* Buffer content should be displayed on an external display only */
-    GRALLOC_USAGE_PRIVATE_EXTERNAL_ONLY   =       0x08000000,
+    /* CAMERA heap is a carveout heap for camera, is not secured*/
+    GRALLOC_USAGE_PRIVATE_CAMERA_HEAP     =       0x08000000,
 
     /* Only this buffer content should be displayed on external, even if
      * other EXTERNAL_ONLY buffers are available. Used during suspend.
@@ -98,6 +99,7 @@ enum {
                              GRALLOC_USAGE_PRIVATE_SYSTEM_HEAP    |\
                              GRALLOC_USAGE_PRIVATE_IOMMU_HEAP     |\
                              GRALLOC_USAGE_PRIVATE_MM_HEAP        |\
+                             GRALLOC_USAGE_PRIVATE_CAMERA_HEAP    |\
                              GRALLOC_USAGE_PRIVATE_ADSP_HEAP)
 
 #define INTERLACE_MASK 0x80

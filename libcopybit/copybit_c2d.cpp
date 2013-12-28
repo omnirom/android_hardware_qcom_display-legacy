@@ -85,6 +85,7 @@ C2D_STATUS (*LINK_c2dMapAddr) ( int mem_fd, void * hostptr, uint32 len,
 
 C2D_STATUS (*LINK_c2dUnMapAddr) ( void * gpuaddr);
 
+#ifdef QCOM_BSP
 C2D_STATUS (*LINK_c2dGetDriverCapabilities) ( C2D_DRIVER_INFO * driver_info);
 
 /* create a fence fd for the timestamp */
@@ -93,6 +94,7 @@ C2D_STATUS (*LINK_c2dCreateFenceFD) ( uint32 target_id, c2d_ts_handle timestamp,
 
 C2D_STATUS (*LINK_c2dFillSurface) ( uint32 surface_id, uint32 fill_color,
                                     C2D_RECT * fill_rect);
+#endif
 
 /******************************************************************************/
 
@@ -646,11 +648,13 @@ static int flush_get_fence_copybit (struct copybit_device_t *dev, int* fd)
         pthread_mutex_unlock(&ctx->wait_cleanup_lock);
         return COPYBIT_FAILURE;
     }
+#ifdef QCOM_BSP
     if(LINK_c2dCreateFenceFD(ctx->dst[ctx->dst_surface_type], ctx->time_stamp,
                                                                         fd)) {
         ALOGE("%s: LINK_c2dCreateFenceFD ERROR", __FUNCTION__);
         status = COPYBIT_FAILURE;
     }
+#endif
     if(status == COPYBIT_SUCCESS) {
         //signal the wait_thread
         ctx->wait_timestamp = true;
@@ -715,7 +719,9 @@ static int clear_copybit(struct copybit_device_t *dev,
         //with the dest surface, hence set dst_surface_mapped.
         ctx->dst_surface_mapped = true;
         ctx->dst_surface_base = buf->base;
+#ifdef QCOM_BSP
         ret = LINK_c2dFillSurface(ctx->dst[RGB_SURFACE], 0x0, &c2drect);
+#endif
     }
     pthread_mutex_unlock(&ctx->wait_cleanup_lock);
     return ret;
@@ -1529,18 +1535,22 @@ static int open_copybit(const struct hw_module_t* module, const char* name,
                                          "c2dMapAddr");
     *(void **)&LINK_c2dUnMapAddr = ::dlsym(ctx->libc2d2,
                                            "c2dUnMapAddr");
+#ifdef QCOM_BSP
     *(void **)&LINK_c2dGetDriverCapabilities = ::dlsym(ctx->libc2d2,
                                            "c2dGetDriverCapabilities");
     *(void **)&LINK_c2dCreateFenceFD = ::dlsym(ctx->libc2d2,
                                            "c2dCreateFenceFD");
     *(void **)&LINK_c2dFillSurface = ::dlsym(ctx->libc2d2,
                                            "c2dFillSurface");
+#endif
 
     if (!LINK_c2dCreateSurface || !LINK_c2dUpdateSurface || !LINK_c2dReadSurface
         || !LINK_c2dDraw || !LINK_c2dFlush || !LINK_c2dWaitTimestamp ||
-        !LINK_c2dFinish  || !LINK_c2dDestroySurface ||
+#ifdef QCOM_BSP
         !LINK_c2dGetDriverCapabilities || !LINK_c2dCreateFenceFD ||
-        !LINK_c2dFillSurface) {
+        !LINK_c2dFillSurface ||
+#endif
+        !LINK_c2dFinish  || !LINK_c2dDestroySurface) {
         ALOGE("%s: dlsym ERROR", __FUNCTION__);
         clean_up(ctx);
         status = COPYBIT_FAILURE;
@@ -1702,6 +1712,7 @@ static int open_copybit(const struct hw_module_t* module, const char* name,
         return status;
     }
 
+#ifdef QCOM_BSP
     if (LINK_c2dGetDriverCapabilities(&(ctx->c2d_driver_info))) {
          ALOGE("%s: LINK_c2dGetDriverCapabilities failed", __FUNCTION__);
          clean_up(ctx);
@@ -1709,6 +1720,7 @@ static int open_copybit(const struct hw_module_t* module, const char* name,
         *device = NULL;
         return status;
     }
+#endif
     // Initialize context variables.
     ctx->trg_transform = C2D_TARGET_ROTATE_0;
 

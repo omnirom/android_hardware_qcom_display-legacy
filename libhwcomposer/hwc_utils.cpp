@@ -73,24 +73,12 @@ static int openFramebufferDevice(hwc_context_t *ctx)
 
     float xdpi = (info.xres * 25.4f) / info.width;
     float ydpi = (info.yres * 25.4f) / info.height;
-
-#ifdef MSMFB_METADATA_GET
-    struct msmfb_metadata metadata;
-    memset(&metadata, 0 , sizeof(metadata));
-    metadata.op = metadata_op_frame_rate;
-
-    if (ioctl(fb_fd, MSMFB_METADATA_GET, &metadata) == -1) {
-        ALOGE("%s:Error retrieving panel frame rate: %s", __FUNCTION__,
-                                                      strerror(errno));
-        close(fb_fd);
-        return -errno;
-    }
-
-    float fps  = metadata.data.panel_frame_rate;
-#else
-    //XXX: Remove reserved field usage on all baselines
+    
     //The reserved[3] field is used to store FPS by the driver.
-    float fps  = info.reserved[3] & 0xFF;
+#ifndef REFRESH_RATE
+     float fps  = info.reserved[3] & 0xFF;
+#else
+    float fps  = REFRESH_RATE;
 #endif
 
     if (ioctl(fb_fd, FBIOGET_FSCREENINFO, &finfo) == -1) {

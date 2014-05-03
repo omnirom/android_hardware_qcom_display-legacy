@@ -498,7 +498,7 @@ void closeAcquireFds(hwc_display_contents_1_t* list) {
 int hwc_sync(hwc_context_t *ctx, hwc_display_contents_1_t* list, int dpy,
         int fd) {
     int ret = 0;
-
+#ifdef USE_FENCE_SYNC
     int acquireFd[MAX_NUM_LAYERS];
     int count = 0;
     int releaseFd = -1;
@@ -619,7 +619,7 @@ int hwc_sync(hwc_context_t *ctx, hwc_display_contents_1_t* list, int dpy,
     } else {
         list->retireFenceFd = releaseFd;
     }
-
+#endif
     return ret;
 }
 

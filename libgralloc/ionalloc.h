@@ -32,7 +32,7 @@
 
 #include "memalloc.h"
 #include "gr.h"
-#include <linux/msm_ion.h>
+#include "ion_msm.h"
 
 namespace gralloc {
 

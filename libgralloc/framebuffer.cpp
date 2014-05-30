@@ -248,7 +248,7 @@ int mapFrameBufferLocked(struct private_module_t* module)
     float xdpi = (info.xres * 25.4f) / info.width;
     float ydpi = (info.yres * 25.4f) / info.height;
 
-    //The reserved[3] field is used to store FPS by the driver.
+    //The reserved[4] field is used to store FPS by the driver.
      float fps  = info.reserved[4] & 0xFF;
     ALOGI("using (fd=%d)\n"
           "id           = %s\n"
@@ -319,8 +319,8 @@ int mapFrameBufferLocked(struct private_module_t* module)
     module->framebuffer->base = intptr_t(vaddr);
     memset(vaddr, 0, fbSize);
     module->currentOffset = 0;
-    //Disable vsync
-    int enable = 0;
+    //Enable vsync
+    int enable = 1;
     ioctl(module->framebuffer->fd, MSMFB_OVERLAY_VSYNC_CTRL,
              &enable);
     return 0;

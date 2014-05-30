@@ -248,8 +248,8 @@ int mapFrameBufferLocked(struct private_module_t* module)
     float xdpi = (info.xres * 25.4f) / info.width;
     float ydpi = (info.yres * 25.4f) / info.height;
 
-    //The reserved[4] field is used to store FPS by the driver.
-     float fps  = info.reserved[4] & 0xFF;
+    //The reserved[3] field is used to store FPS by the driver.
+     float fps  = info.reserved[3] & 0xFF;
     ALOGI("using (fd=%d)\n"
           "id           = %s\n"
           "xres         = %d px\n"

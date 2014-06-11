@@ -83,6 +83,7 @@ int IonAlloc::alloc_buffer(alloc_data& data)
     ionAllocData.len = data.size;
     ionAllocData.align = data.align;
 #ifndef NEW_ION_API
+    ionAllocData.heap_mask = data.flags;
     ionAllocData.flags = data.flags;
 #else
     ionAllocData.heap_mask = data.flags & ~ION_SECURE;
